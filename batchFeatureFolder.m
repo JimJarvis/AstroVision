@@ -1,19 +1,17 @@
-%% Get a feature vector from a folder of images
-% Subfolder name, levels of gaussian pyramid
+%% Get a matrix of feature vectors from a folder of images
+% Each row a feauture, each col a dimension in a feature
+% <Subfolder name>, <levels of gaussian pyramid>
 % max_pyramid_level: the maximum level to be stored in the database
-% later we use concatFeatures to use histograms from various depths
 %
 function features = batchFeatureFolder(folder, max_pyramid_level)
 
 listing = dir(folder);
 
 % listing also includes two dirs, './' and '../'
+% i represents the 'real' index
 i = 1;
-% Dim1: difference levels, Dim2: number of histogram bins, Dim3: data samples 
-features = zeros(max_pyramid_level-1, 256, numel(listing) - 2);
 
 for l = 1 : numel(listing)
-
     file = listing(l);
     if ~file.isdir
         fprintf('Image %d ...\n', i);
@@ -25,10 +23,11 @@ for l = 1 : numel(listing)
             continue
         end
 
-        features(:, :, i) = histogramFeature(img, max_pyramid_level);
+        if i == 1: % first time, we allocate the space
+            fea = getFeature(img, max_pyramid_level);
+            features = zeros(numel(listing)-2, numel(fea));
+        end
+        features(i, :) = getFeature(img, max_pyramid_level);
         i = i + 1;
     end
 end
-
-% Some images might be corrupted and not stored
-features = features(:, :, 1:i-1);

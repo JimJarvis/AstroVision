@@ -11,5 +11,5 @@ base_array = cell(numel(base_names), 1);
 for i = 1:numel(base_names)
     v = ['F_' base_names{i}];
     v = evalin('base', v);
-    base_array{i} = concatFeatures(v, pyramid_level);
+    base_array{i} = v;
 end

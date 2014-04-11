@@ -11,7 +11,7 @@ for sub = subfolders
     sub = sub{1};
     fprintf('\n============ %s =============\n', sub);
     basename = ['F_' sub];
-    eval(sprintf('%s = readAstroFeatures(''%s'', 9);', basename, fd(sub)));
+    eval(sprintf('%s = batchFeatureFolder(''%s'', 9);', basename, fd(sub)));
 
     if first_save
         save('AstroBase', basename);
