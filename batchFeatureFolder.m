@@ -1,8 +1,9 @@
-%% Subfolder name, levels of gaussian pyramid
+%% Get a feature vector from a folder of images
+% Subfolder name, levels of gaussian pyramid
 % max_pyramid_level: the maximum level to be stored in the database
 % later we use concatFeatures to use histograms from various depths
 %
-function features = readAstroFeatures(folder, max_pyramid_level)
+function features = batchFeatureFolder(folder, max_pyramid_level)
 
 listing = dir(folder);
 

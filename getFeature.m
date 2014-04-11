@@ -1,9 +1,9 @@
-%% Returns the multi-resolution histogram feature vector
+%% Returns the multi-resolution histogram feature vector from a single image
 % for each different level (rows of 'feature')
 % max_pyramid_level - 1 is #row of 'feature'
 % optional histogram visualization
 %
-function feature = histogramFeature(img, max_pyramid_level, visual)
+function feature = getFeature(img, max_pyramid_level, visual)
 
 binrange = linspace(0, 1, 256);
 

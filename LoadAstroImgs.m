@@ -1,9 +1,9 @@
 %% Loads images, compute features and store them
 %
 
-fd = @(subfolder) ['E:\Miscellaneous\AstroVision\' subfolder];
+fd = @(subfolder) ['E:\LonelyCoder\AstroVision\' subfolder];
 
-subfolders = {'ref', 'si850', 'w12', 'om23', 'om29'};
+subfolders = {'ref', 'si850', 'w12', 'om23'};
 
 first_save = true;
 
