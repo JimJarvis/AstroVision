@@ -45,14 +45,27 @@ for l = 3 : nArr+1
 end
 
 binrange = zeros(1, nBin+1);
+% index of the bin endpoints in the sorted array
+idx = zeros(1, nBin+1); 
 binrange(nBin + 1) = arr(end);
+idx(nBin + 1) = nArr;
 nCount = nBin + 1;
 k = nArr;
 while nCount >= 3
     id = floor(mat1(k+1, nCount) - 2);
     binrange(nCount - 1) = arr(id + 1);
+    idx(nCount - 1) = id + 1;
     k = floor(mat1(k+1, nCount) - 1);
     nCount = nCount - 1;
 end
 
-gvf = 0;
+%% Calculate Goodness of Variance Fit (GVF)
+% helper func
+sumsq = @(arr) sum((arr - mean(arr)).^2);
+SDAM = sumsq(arr);
+SDCM = 0;
+for i = 1:nBin
+    subArr = arr(idx(i)+1:idx(i+1));
+    SDCM = SDCM + sumsq(subArr);
+end
+gvf = (SDAM - SDCM) / SDAM;
