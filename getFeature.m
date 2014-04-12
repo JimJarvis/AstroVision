@@ -1,13 +1,13 @@
 %% Returns the multi-resolution histogram feature vector from a single image
-% for each different level (rows of 'feature')
-% max_pyramid_level - 1 is #row of 'feature'
+% Uses the bin width from 'ClusterBin.mat'
+% option struct:
+% .level: pyramid level
+% .
 % optional histogram visualization
 %
-function feature = getFeature(img, max_pyramid_level, visual)
+function feature = getFeature(img, option)
 
 binrange = linspace(0, 1, 256);
-
-img = mat2gray(img);
 
 if ~exist('max_pyramid_level', 'var')
     pyramid = genGaussianPyramid(img);

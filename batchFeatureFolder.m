@@ -1,9 +1,8 @@
 %% Get a matrix of feature vectors from a folder of images
 % Each row a feauture, each col a dimension in a feature
 % <Subfolder name>, <levels of gaussian pyramid>
-% max_pyramid_level: the maximum level to be stored in the database
 %
-function features = batchFeatureFolder(folder, max_pyramid_level)
+function features = batchFeatureFolder(folder, option)
 
 listing = dir(folder);
 
@@ -17,7 +16,8 @@ for l = 1 : numel(listing)
         fprintf('Image %d ...\n', i);
         try
             % might throw FITS read error
-            img = fitsread([folder '\' file.name]);
+            % mat2gray to convert to [0, 1]
+            img = mat2gray(fitsread([folder '\' file.name]));
         catch err
             fprintf(['ERROR:\t' file.name '\n']);
             continue
@@ -27,7 +27,7 @@ for l = 1 : numel(listing)
             fea = getFeature(img, max_pyramid_level);
             features = zeros(numel(listing)-2, numel(fea));
         end
-        features(i, :) = getFeature(img, max_pyramid_level);
+        features(i, :) = getFeature(img, option);
         i = i + 1;
     end
 end

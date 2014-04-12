@@ -2,8 +2,9 @@
 %
 
 fd = @(subfolder) ['E:\LonelyCoder\AstroVision\' subfolder];
-
 subfolders = {'ref', 'si850', 'w12', 'om23'};
+%% Set the feature generation options here
+opt.level = 6;
 
 first_save = true;
 
@@ -11,7 +12,7 @@ for sub = subfolders
     sub = sub{1};
     fprintf('\n============ %s =============\n', sub);
     basename = ['F_' sub];
-    eval(sprintf('%s = batchFeatureFolder(''%s'', 9);', basename, fd(sub)));
+    eval(sprintf('%s = batchFeatureFolder(''%s'', opt);', basename, fd(sub)));
 
     if first_save
         save('AstroBase', basename);
