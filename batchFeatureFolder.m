@@ -1,6 +1,6 @@
 %% Get a matrix of feature vectors from a folder of images
 % Each row a feauture, each col a dimension in a feature
-% <Subfolder name>, <levels of gaussian pyramid>
+% <Subfolder name>, <Feature generation options>
 %
 function features = batchFeatureFolder(folder, option)
 
@@ -24,7 +24,7 @@ for l = 1 : numel(listing)
         end
 
         if i == 1: % first time, we allocate the space
-            fea = getFeature(img, max_pyramid_level);
+            fea = getFeature(img, option);
             features = zeros(numel(listing)-2, numel(fea));
         end
         features(i, :) = getFeature(img, option);

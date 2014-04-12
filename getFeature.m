@@ -2,25 +2,23 @@
 % Uses the bin width from 'ClusterBin.mat'
 % option struct:
 % .level: pyramid level
-% .
-% optional histogram visualization
+% .window: gaussian window size
+% .sigma: initial sigma
+% .scale: sigma * scale^n, should always be > 1
+% .visual: display histogram
 %
 function feature = getFeature(img, option)
 
+% option setting with defaults
+if isfield(option, 'level'), level = option.level; else level = 6; end
+if isfield(option, 'window'), window = option.window; else window = 7; end
+if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 1; end
+if isfield(option, 'scale'), scale = option.scale; else scale = 2; end
+if isfield(option, 'visual'), visual = option.visual; else visual = false; end
+
+
+
 binrange = linspace(0, 1, 256);
-
-if ~exist('max_pyramid_level', 'var')
-    pyramid = genGaussianPyramid(img);
-else
-    pyramid = genGaussianPyramid(img, max_pyramid_level);
-end
-
-if ~exist('visual', 'var')
-    visual = false;
-end
-
-bin_prev = []; % for histogram difference
-feature = []; % concatenated feature vector
 
 for i = 1:numel(pyramid)
     % histogram by image intensity
@@ -29,7 +27,7 @@ for i = 1:numel(pyramid)
     bin = bin / norm(bin, 1);
 
     if visual
-        subplot(max_pyramid_level, 1, i);
+        subplot(level, 1, i);
         length_cut = 1:32;
         bar(binrange(length_cut), bin(length_cut), 0.6, 'FaceColor', [0.5 0 0.6], 'EdgeColor', [0 1 0]);
     end
