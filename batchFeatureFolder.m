@@ -4,13 +4,11 @@
 %
 function features = batchFeatureFolder(folder, option)
 
-files = dir(folder);
-
 % listing also includes two dirs, './' and '../'
 % i represents the 'real' index
 i = 1;
 
-for file = {files(~[files.isdir]).name}
+for file = getFilesFolder(folder)
     fname = file{1}; % get file name from the singleton cell
     fprintf('Image %d ...\n', i);
     try

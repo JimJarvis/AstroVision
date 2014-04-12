@@ -1,23 +1,21 @@
-%% Generate a reduction Gaussian Pyramid
-% optionally save the images to disk
+%% Generate a Gaussian Pyramid
+% optionally save the stack to disk
 
-function imgPyramid = genGaussianPyramid(img, level, save_img_name)
+function imgPyramid = genGaussianPyramid(img, option, save_img_name)
 
-if ~exist('level', 'var')
-    level = floor(0.5 * log2(numel(img)));
-end
+[level window sigma scale] = optionReader(option);
 
 imgPyramid = cell(level, 1);
 imgPyramid{1} = img;
 
-for i = 2:level
-    gauss = vision.Pyramid('PyramidLevel', i-1);
-    imgPyramid{i} = step(gauss, img);
+for l = 2:level
+    imgPyramid{l} = imfilter(img, ...
+        fspecial('gaussian', window, sigma * scale^(l-2)));
 end
 
 if exist('save_img_name', 'var')  % save the images
     for i = 1:level
         imwrite(uint8(imgPyramid{i}), ...
-            sprintf('test_images/%s_%d.png', save_img_name, i));
+            sprintf('test/%s_%d.png', save_img_name, i));
     end
 end

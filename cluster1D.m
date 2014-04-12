@@ -8,7 +8,7 @@
 %
 function [binrange gvf] = cluster1D(arr, nBin)
 
-arr = sort(arr(:));
+arr = sort(arr); % array assumed to be 1D
 nArr = numel(arr);
 
 mat1 = zeros(nArr + 1, nBin + 1);

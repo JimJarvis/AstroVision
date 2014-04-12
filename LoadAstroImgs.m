@@ -1,7 +1,7 @@
 %% Loads images, compute features and store them
 %
 
-fd = @(subfolder) ['E:\LonelyCoder\AstroVision\' subfolder];
+fd = @(subfolder) ['data\' subfolder];
 subfolders = {'ref', 'si850', 'w12', 'om23'};
 %% Set the feature generation options here
 opt.level = 6;
