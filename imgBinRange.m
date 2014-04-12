@@ -32,6 +32,5 @@ for l = 1:level % l == 1 for the original unblurred image
             img = imfilter(img, gfilter); end
         mergedImg = [mergedImg; img(:)];
     end
-    [bincell{l}, gvf(l)] = cluster1D(mergedImg, nbin(l));
-    gvf(l)
+    bincell{l} = lloyd1D(mergedImg, nbin(l));
 end
