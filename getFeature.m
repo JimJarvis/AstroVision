@@ -1,22 +1,13 @@
 %% Returns the multi-resolution histogram feature vector from a single image
-% Uses the bin width from 'ClusterBin.mat'
-% option struct:
-% .level: pyramid level
-% .window: gaussian window size
-% .sigma: initial sigma
-% .scale: sigma * scale^n, should always be > 1
-% .visual: display histogram
+% option struct see 'optionReader.m'
 %
 function feature = getFeature(img, option)
 
-% option setting with defaults
-if isfield(option, 'level'), level = option.level; else level = 6; end
-if isfield(option, 'window'), window = option.window; else window = 7; end
-if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 1; end
-if isfield(option, 'scale'), scale = option.scale; else scale = 2; end
+%% option setting with defaults
+[level window sigma scale] = optionReader(option)
+% bin range must be a cell array that contains the bin ranges for all corresponding blur levels
+if isfield(option, 'binrange'), binrange = option.binrange; else error('Error: bin range not specified'), end
 if isfield(option, 'visual'), visual = option.visual; else visual = false; end
-
-
 
 binrange = linspace(0, 1, 256);
 
