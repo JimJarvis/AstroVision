@@ -6,9 +6,8 @@
 %
 % returns:
 % - bincell: a cell array whose components are the bin ranges of each level of the pyramid
-% - gvf: Goodness of Variance Fit of each level
 %
-function [bincell, gvf] = imgBinRange(folder, nSample, option)
+function bincell = imgBinRange(folder, nSample, option)
 
 [level, window, sigma, scale, nbin] = optionReader(option);
 
@@ -19,7 +18,6 @@ randImg = @() mat2gray(fitsread([folder '/' files{randi(nFile)}]));
 
 % Randomly choose 10 images to do the 1D clustering for each level of the pyramid. Report their GVF as well
 bincell = cell(level);
-gvf = zeros(1, level);
 
 for l = 1:level % l == 1 for the original unblurred image
     mergedImg = [];

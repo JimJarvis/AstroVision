@@ -10,7 +10,7 @@ x = sort(x);
 n = length(x);
 s = inf(n,1);
 q = zeros(k,1);
-rng(0);
+% rng(0);
 q(1) = x(randi(n));
 next_report = 2;
 for j = 2:k
@@ -28,8 +28,6 @@ q = lloyd(x,q);
 fprintf(2, 'Running lloyd iteration 2\n');
 q = lloyd(x,q);
 q = sort(q,'ascend');
-
-q
 
 binrange = zeros(k - 1, 1);
 for i = 1 : k-1
