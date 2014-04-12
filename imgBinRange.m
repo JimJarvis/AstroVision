@@ -15,7 +15,7 @@ function [bincell, gvf] = imgBinRange(folder, nSample, option)
 files = getFilesFolder(folder); % listing of all file names
 nFile = numel(files);
 % read a random FITS image
-randImg = @() mat2gray(fitsread([folder '\' files{randi(nFile)}]));
+randImg = @() mat2gray(fitsread([folder '/' files{randi(nFile)}]));
 
 % Randomly choose 10 images to do the 1D clustering for each level of the pyramid. Report their GVF as well
 bincell = cell(level);

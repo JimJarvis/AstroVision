@@ -4,12 +4,8 @@
 function feature = getFeature(img, option)
 
 %% option setting with defaults
-[level window sigma scale] = optionReader(option)
-% bin range must be a cell array that contains the bin ranges for all corresponding blur levels
-if isfield(option, 'binrange'), binrange = option.binrange; else error('Error: bin range not specified'), end
-if isfield(option, 'visual'), visual = option.visual; else visual = false; end
+[level, window, sigma, scale, ~, bincell, visual] = optionReader(option)
 
-binrange = linspace(0, 1, 256);
 
 for i = 1:numel(pyramid)
     % histogram by image intensity

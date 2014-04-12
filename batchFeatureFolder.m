@@ -4,7 +4,6 @@
 %
 function features = batchFeatureFolder(folder, option)
 
-% listing also includes two dirs, './' and '../'
 % i represents the 'real' index
 i = 1;
 
@@ -14,7 +13,7 @@ for file = getFilesFolder(folder)
     try
         % might throw FITS read error
         % mat2gray to convert to [0, 1]
-        img = mat2gray(fitsread([folder '\' fname]));
+        img = mat2gray(fitsread([folder '/' fname]));
     catch err
         fprintf(['ERROR:\t' fname '\n']);
         continue
