@@ -6,7 +6,7 @@
 % - binrange: endpoints of each bin. Note: cannot be used directly in 'histc' because the end points are off by one (histc excludes the endpoint while we include it).  
 % - gvf: Goodness of Variance Fit, taking the difference between the squared deviations from the srray mean (SDAM) and the squared deviations from the class means (SDCM), divided by SDAM. Note that the more classes the better gvf. 
 %
-function [binrange gvf] = cluster1D(arr, nBin)
+function [binrange gvf] = jenksBreak(arr, nBin)
 
 arr = sort(arr); % array assumed to be 1D
 nArr = numel(arr);
