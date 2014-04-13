@@ -4,7 +4,6 @@
 %
 %% Settable parameters
 base_names = {'ref', 'w12'};
-pyramid_level = 6; % Gaussian pyramid level
 hidden_layer_size = 450; % if an array, we use multi-layer NN
 iter = 400;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
@@ -30,8 +29,13 @@ end
 %
 if preprocess
     disp('Splitting the database into training/test.');
-    [base_merged, base_label, set_train, set_test] = ...
-        splitBase(selectBase(base_names, pyramid_level), 0.8); end
+    % Load from featureMap
+    featureMap = loadVar('AstroFeatures'); featureMap = featureMap{1};
+    bases = cell(numel(base_names), 1);
+    for i = 1:numel(bases), bases{i} = featureMap(base_names{i}); end
+    
+    [base_merged, base_label, set_train, set_test] = splitBase(bases, 0.8);
+end
 
 label_size = max(base_label);
 labels = 1:label_size; % all possible label types
@@ -171,7 +175,7 @@ fprintf('Accuracy = %.2f%%\n', sum(pred == y_test)/numel(y_test)*100);
 
 %% ================= Saving to disk =================
 %
-save AstroNN base_names base_merged base_label pyramid_level set_train set_test hidden_layer_size pca_U pca_k pca_mu pca_sigma pca_variance_thresh;
+save AstroNN base_names base_merged base_label set_train set_test hidden_layer_size pca_U pca_k pca_mu pca_sigma pca_variance_thresh;
 
 if MULTI_NN
     save AstroNN Theta -append

@@ -7,13 +7,19 @@ function feature = getFeature(img, option)
 [level, window, sigma, scale, ~, bincell, visual] = optionReader(option);
 pyramid = genGaussianPyramid(img, option);
 
-feature = [];
+first_level = true;
 
 for l = 1:level
     binrange = bincell{l};
     bin = imgHistCount(pyramid{l}, binrange);
-    % L1-norm flattening
+    % L1-normalization
     bin = bin / norm(bin, 1);
+
+    if first_level %% alloc
+        first_level = false;
+        len = numel(bin);
+        feature = zeros(level * len, 1);
+    end
 
     if visual
         subplot(level, 1, l);
@@ -21,5 +27,5 @@ for l = 1:level
         bar(binrange(length_cut), bin(length_cut), 0.6, 'FaceColor', [0.5 0 0.6], 'EdgeColor', [0 1 0]);
     end
 
-    feature = [feature; bin];
+    feature(1 + len*(level-1):len*level) = bin;
 end
