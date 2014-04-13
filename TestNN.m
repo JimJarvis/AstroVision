@@ -1,5 +1,8 @@
-%% ================= Testing =================
+%% Test the neural output. Report accuracies.
+% Returns: predicted labels
 %
+function pred = testNN(Theta, Title, base_merged, base_label, set_test, pca_mu, pca_sigma, pca_U)
+
 % The X_test is already transformed by PCA. 
 % Otherwise we have to pass pca_* to predict()
 labels = 1:max(base_label);
@@ -9,13 +12,10 @@ X_test = applyPCA(X_test, pca_mu, pca_sigma, pca_U);
 
 y_test = base_label(set_test, :);
 
-if numel(hidden_layer_size) > 1
-    pred = predictMultiNN(Theta, labels, X_test);
-else % single layer
-    pred = predictNN(Theta1, Theta2, labels, X_test);
-end
+%% If single layer, {Theta1, Theta2}
+pred = predictMultiNN(Theta, labels, X_test);
 
-fprintf('\nError analysis\n');
+fprintf('\n%s\n', Title);
 [F1, prec, recl] = F1score(y_test, pred, labels);
 for i = labels
     fprintf('Class %d\n', i);

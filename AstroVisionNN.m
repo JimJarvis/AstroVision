@@ -12,6 +12,7 @@ pca_variance_thresh = 0.999; % how much variance we'd like to retain
 tol_NN = 0.01; % neural network error tolerance
 preprocess = 1; % set to true to perform data set splitting and PCA, 
                 % otherwise directly call pca_* and set_* from workspace
+testing = 1; % set to true to perform testing (and cross-validation). 
 
 
 %% ================== Training/Testing data =================
@@ -34,7 +35,7 @@ if preprocess
     bases = cell(numel(base_names), 1);
     for i = 1:numel(bases), bases{i} = featureMap(base_names{i}); end
     
-    [base_merged, base_label, set_train, set_test] = splitBase(bases, 0.8);
+    [base_merged, base_label, set_train, set_test, set_valid] = splitBase(bases);
 end
 
 label_size = max(base_label);
@@ -66,13 +67,6 @@ else
 input_layer_size = pca_k;
 fprintf('Dimension reduction: %d/%d',...
             pca_k, size(base_merged, 2));
-
-
-X_test = base_merged(set_test, :);
-y_test = base_label(set_test, :);
-
-% We also apply the same PCA parameters to the test set
-X_test = applyPCA(X_test, pca_mu, pca_sigma, pca_U);
 
 
 %% ================= Initialization ===============
@@ -153,32 +147,21 @@ else % single layer
 end
 
 
-%% ================= Testing =================
+%% ================= Testing and Cross Validation =================
 %
-% The X_test is already transformed by PCA. 
-% Otherwise we have to pass pca_* to predict()
-if MULTI_NN
-    pred = predictMultiNN(Theta, labels, X_test);
-else % single layer
-    pred = predictNN(Theta1, Theta2, labels, X_test);
-end
 
-fprintf('\nError analysis\n');
-[F1, prec, recl] = F1score(y_test, pred, labels);
-for i = labels
-    fprintf('Class %d\n', i);
-    fprintf('\tF1 = %.2f%%\n\tPrecision = %.2f%%\n\tRecall = %.2f%%\n',...
-                F1(i)*100, prec(i)*100, recl(i)*100);
+if ~MULTI_NN
+    Theta = {Theta1, Theta2}; end
+
+%% Cross validation
+testNN(Theta, 'Cross Validation', base_merged, base_label, set_valid, pca_mu, pca_sigma, pca_U);
+
+%% Optionally testing
+if testing
+testNN(Theta, 'Testing', base_merged, base_label, set_test, pca_mu, pca_sigma, pca_U);
 end
-fprintf('Accuracy = %.2f%%\n', sum(pred == y_test)/numel(y_test)*100);
 
 
 %% ================= Saving to disk =================
 %
-save AstroNN base_names base_merged base_label set_train set_test hidden_layer_size pca_U pca_k pca_mu pca_sigma pca_variance_thresh;
-
-if MULTI_NN
-    save AstroNN Theta -append
-else
-    save AstroNN Theta1 Theta2 -append
-end
+save AstroNN Theta base_names base_merged base_label set_train set_test set_valid hidden_layer_size pca_U pca_k pca_mu pca_sigma pca_variance_thresh;
