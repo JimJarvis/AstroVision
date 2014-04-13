@@ -4,7 +4,7 @@
 function feature = getFeature(img, option)
 
 %% option setting with defaults
-[level, window, sigma, scale, ~, bincell, visual] = optionReader(option)
+[level, window, sigma, scale, ~, bincell, visual] = optionReader(option);
 pyramid = genGaussianPyramid(img, option);
 
 feature = [];

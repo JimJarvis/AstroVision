@@ -19,7 +19,7 @@ for file = getFilesFolder(folder)
         continue
     end
 
-    if i == 1: % first time, we allocate the space
+    if i == 1 % first time, we allocate the space
         fea = getFeature(img, option);
         features = zeros(numel(listing)-2, numel(fea));
     end

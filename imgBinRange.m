@@ -5,7 +5,7 @@
 % - option: specify various options using optionReader()
 %
 % returns:
-% - bincell: a cell array whose components are the bin ranges of each level of the pyramid
+% - bincell: a cell array whose components are the bin ranges of each level of the pyramid. Each bin range will have (nbin - 1) interval endpoints, omitting -Inf at beginning and +Inf at end. 
 %
 function bincell = imgBinRange(folder, nSample, option)
 
@@ -17,7 +17,7 @@ nFile = numel(files);
 randImg = @() mat2gray(fitsread([folder '/' files{randi(nFile)}]));
 
 % Randomly choose 10 images to do the 1D clustering for each level of the pyramid. Report their GVF as well
-bincell = cell(level);
+bincell = cell(level, 1);
 
 for l = 1:level % l == 1 for the original unblurred image
     mergedImg = [];
