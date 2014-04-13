@@ -1,14 +1,22 @@
 %% Merge n bases (cell array) and then split into training and testing features
 % for n-class classification
 % Each base has row as feature vectors
-% base_label: all the correct label to base_merged
-% set how much percentage to be training (VS testing), default 80%
-% set_train/test contains the indices of the samples
+% Parameters:
+% - bases: cell array of bases
+% - percent_test: how much percent of the dataset should be test data [15%]
+% - percent_valid: how much percent of the dataset should be cross-validation [10%]
+% Returns: 
+% - base_merged
+% - base_label: all the correct label to base_merged
+% - set_train, set_test, set_valid: contains the indices for each sample set
 %
-function [base_merged base_label set_train set_test] = splitBase(bases, percent)
+function [base_merged base_label set_train set_test set_valid] = splitBase(bases, percent_test, percent_valid)
 
-if ~exist('percent', 'var') || isempty(percent)
-    percent = 0.8;
+if ~exist('percent_test', 'var') || isempty(percent_test)
+    percent_test = 0.15;
+end
+if ~exist('percent_valid', 'var') || isempty(percent_valid)
+    percent_valid = 0.1;
 end
 
 N = numel(bases); % N-classification problem
@@ -37,20 +45,24 @@ label_func = @labelFunc;
 
 set_train = [];
 set_test = [];
+set_valid = [];
 
 idx_start = 0;
 for label = 1:N
     len = size(bases{label}, 1);
-    split = ceil(len * percent);
+    split1 = ceil(len * (1 - percent_test - percent_valid));
+    split2 = ceil(len * (1 - percent_valid));
     idxs = idx_start + (1:len);
     idxs = randpermA(idxs);
-    set_train = [set_train idxs(1:split)];
-    set_test = [set_test idxs(split+1:end)];
+    set_train = [set_train idxs(1:split1)];
+    set_test = [set_test idxs(split1+1:split2)];
+    set_valid = [set_valid idxs(split2+1:end)];
 
     idx_start = idx_start + len;
 end
 
 set_train = randpermA(set_train);
 set_test = randpermA(set_test);
+set_valid = randpermA(set_valid);
 
 end

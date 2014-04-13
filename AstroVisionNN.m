@@ -3,13 +3,13 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_names = {'ref', 'w12'};
-hidden_layer_size = 450; % if an array, we use multi-layer NN
+base_names = {'w12', 'si850'};
+hidden_layer_size = 100; % if an array, we use multi-layer NN
 iter = 400;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
-%tol_NN = 0.11; % neural network error tolerance
 pca_variance_thresh = 0.999; % how much variance we'd like to retain 
                     % when compressing training data by PCA
+tol_NN = 0.01; % neural network error tolerance
 preprocess = 1; % set to true to perform data set splitting and PCA, 
                 % otherwise directly call pca_* and set_* from workspace
 
