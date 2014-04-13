@@ -6,8 +6,8 @@ function features = batchFeatureFolder(folder, option)
 
 % i represents the 'real' index
 i = 1;
-
-for file = getFilesFolder(folder)
+fileList = getFilesFolder(folder);
+for file = fileList
     fname = file{1}; % get file name from the singleton cell
     fprintf('Image %d ...\n', i);
     try
@@ -21,7 +21,7 @@ for file = getFilesFolder(folder)
 
     if i == 1 % first time, we allocate the space
         fea = getFeature(img, option);
-        features = zeros(numel(listing)-2, numel(fea));
+        features = zeros(numel(fileList), numel(fea));
     end
     features(i, :) = getFeature(img, option);
     i = i + 1;

@@ -10,8 +10,9 @@ datamap = containers.Map(); % matlab hashmap
 
 for folder = folders  
     folder = folder{1};
-    fprintf('\nProcessing %s ...\n', folder);
-    opt.bincell = load(['BIN_' folder]);
+    fprintf('\n=========== %s ===========\n', folder);
+    loaded = loadVar(['BIN_' folder]);
+    opt.bincell = loaded{1}
     datamap(folder) = ...
         batchFeatureFolder(fName(folder), opt);
 end

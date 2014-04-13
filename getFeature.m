@@ -11,7 +11,7 @@ feature = [];
 
 for l = 1:level
     binrange = bincell{l};
-    bin = imgHistCount(pyramid{i}, binrange);
+    bin = imgHistCount(pyramid{l}, binrange);
     % L1-norm flattening
     bin = bin / norm(bin, 1);
 
