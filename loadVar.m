@@ -1,12 +1,17 @@
 %% Load into a variable from a ".mat" file on disk
-% If the .mat file has more than 1 variable, return a cell array that holds each variable in sequence
+% Returns:
+% - a cell array with each variable in sequence
+% - a map that maps a var name to an int index in the cell array
+% usage: c{m('varname')}
 %
-function v = loadVar(matfile)
+function [c m] = loadVar(matfile)
 
 loaded = load(matfile);
 fns = fieldnames(loaded);
 
-v = cell(numel(fns), 1);
+c = cell(numel(fns), 1);
+m = containers.Map();
 for i = 1:numel(fns)
-    v{i} = getfield(loaded, fns{i});
+    c{i} = getfield(loaded, fns{i});
+    m(fns{i}) = i;
 end
