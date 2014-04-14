@@ -6,6 +6,10 @@ function featureMap = loadAllFeatures()
 folders = {'ref', 'w12'};
 nbin = 256;
 
+%% Precalculate the gaussian filters
+dummyopt.field = 0;
+opt.filters = genGaussianPyramid([], dummyopt);
+
 fName = @(folder) ['data/' folder];
 featureMap = containers.Map(); % matlab hashmap
 
