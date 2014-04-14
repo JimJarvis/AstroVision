@@ -3,18 +3,22 @@
 %
 function featureMap = loadAllFeatures()
 
-folders = {'ref', 'si850', 'w12'};
+folders = {'ref', 'w12'};
+nbin = 256;
 
 fName = @(folder) ['data/' folder];
 featureMap = containers.Map(); % matlab hashmap
 
-for folder = folders  
-    folder = folder{1};
-    fprintf('\n=========== %s ===========\n', folder);
-    loaded = loadVar(['BIN_' folder]);
-    opt.bincell = loaded{1};
-    featureMap(folder) = ...
-        batchFeatureFolder(fName(folder), opt);
+for f1 = folders  
+    f1 = f1{1};
+    for f2 = folders
+        f2 = f2{1};
+        fprintf('\n======== %s - %s ========\n', f1, f2);
+        [varcell varmap] = loadVar(['BIN_' f2]);
+        opt.bincell = varcell{varmap(['bin_' f2 '_' num2str(nbin)])};
+        featureMap([f1 '-' f2]) = ...
+            batchFeatureFolder(fName(f1), opt);
+    end
 end
 
 save('AstroFeatures', 'featureMap');
