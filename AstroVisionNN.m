@@ -3,16 +3,16 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_names = {'w12', 'si850'};
-hidden_layer_size = 100; % if an array, we use multi-layer NN
+base_names = {'ref', 'w12'};
+hidden_layer_size = 800; % if an array, we use multi-layer NN
 iter = 400;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
 pca_variance_thresh = 0.999; % how much variance we'd like to retain 
                     % when compressing training data by PCA
-tol_NN = 0.01; % neural network error tolerance
+tol_NN = 0.11; % neural network error tolerance
 preprocess = 1; % set to true to perform data set splitting and PCA, 
                 % otherwise directly call pca_* and set_* from workspace
-testing = 1; % set to true to perform testing (and cross-validation). 
+testing = 0; % set to true to perform testing (and cross-validation). 
 
 
 %% ================== Training/Testing data =================
@@ -29,11 +29,24 @@ end
 % Split the data into training and testing sets
 %
 if preprocess
-    disp('Splitting the database into training/test.');
+    disp('Splitting the database into training/validation/test.');
     % Load from featureMap
     featureMap = loadVar('AstroFeatures'); featureMap = featureMap{1};
     bases = cell(numel(base_names), 1);
-    for i = 1:numel(bases), bases{i} = featureMap(base_names{i}); end
+    i = 1;
+    for f1 = base_names
+        f1 = f1{1};
+        base = [];
+        for f2 = base_names
+            f2 = f2{1};
+            base = [base featureMap([f1 '-' f2])];
+        end
+        bases{i} = base;
+        i = i + 1;
+    end
+
+    bases{1} = featureMap('ref-ref');
+    bases{2} = featureMap('w12-ref');
     
     [base_merged, base_label, set_train, set_test, set_valid] = splitBase(bases);
 end
@@ -42,6 +55,7 @@ label_size = max(base_label);
 labels = 1:label_size; % all possible label types
 
 fprintf('Training set size: %d\n', numel(set_train));
+fprintf('Validation set size: %d\n', numel(set_valid));
 fprintf('Testing set size: %d\n', numel(set_test));
 fprintf('Labels: %d\n', label_size);
 fprintf('Hidden Layer: %d\n', hidden_layer_size);

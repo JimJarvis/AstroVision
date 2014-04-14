@@ -19,7 +19,6 @@ imgPyramid{1} = img;
 
 if isfield(option, 'filters')
     % Use pre-calculated filters
-    'good'
     for l = 2:level
         imgPyramid{l} = imfilter(img, option.filters{l});
     end
