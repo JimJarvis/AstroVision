@@ -1,10 +1,12 @@
 %% Loads images from all folders, computes features and stores them
 % Gaussian pyramid options must be consistent with how the BIN_*.mat are generated
-%
-function featureMap = loadAllFeatures()
+% Parameters:
+% - folders: cell array of folders: {'ref', 'si850'}
+% - nBin: the bin level for each pyramid layer. Must be consistent with those stored in BIN_*.mat
+function featureMap = loadAllFeatures(folders, nBin)
 
-folders = {'ref', 'si850'};
-nBin = 128;
+% folders = {'ref', 'si850'};
+% nBin = 128;
 
 %% Precalculate the gaussian filters
 opt.filters = genFilters([]);
@@ -37,8 +39,11 @@ for f1 = folders
         opt.bincell = varcell{varmap(['bin_' f2 '_' num2str(nBin)])};
         featureMap(keyname) = ...
             batchFeatureFolder(fName(f1), opt);
+
+       % Save to disk frequently
+        fprintf('\nSaving %s to disk ...\n', keyname);
+        save('AstroFeatures', 'featureMap');
     end
 end
 
-save('AstroFeatures', 'featureMap');
 fprintf('\nDONE\n');
