@@ -14,8 +14,13 @@ fName = @(folder) ['data/' folder];
 
 if exist('AstroFeatures.mat', 'file')
     featureMap = loadVar('AstroFeatures', true); % single var loading
-    featureMap.keys
+    fprintf('AstroFeatures.mat exists on disk. Current key values:\n');
+    for key = featureMap.keys
+        fprintf('%s\n', key{1});
+    end
+    fprintf('Write new key-value pairs to ''featureMap''\n');
 else
+    fprintf('Create a new AstroFeatures.mat with ''featureMap'' hash map \n');
     featureMap = containers.Map(); % matlab hashmap
 end
 
