@@ -3,7 +3,7 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_names = {'ref', 'w12'};
+base_key = {'ref-ref', 'w12-ref'};
 hidden_layer_size = 800; % if an array, we use multi-layer NN
 iter = 400;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
@@ -32,21 +32,10 @@ if preprocess
     disp('Splitting the database into training/validation/test.');
     % Load from featureMap
     featureMap = loadVar('AstroFeatures'); featureMap = featureMap{1};
-    bases = cell(numel(base_names), 1);
-    i = 1;
-    for f1 = base_names
-        f1 = f1{1};
-        base = [];
-        for f2 = base_names
-            f2 = f2{1};
-            base = [base featureMap([f1 '-' f2])];
-        end
-        bases{i} = base;
-        i = i + 1;
+    bases = cell(numel(base_key), 1);
+    for i = 1:numel(bases)
+        bases{i} = featureMap(base_key{i});
     end
-
-    bases{1} = featureMap('ref-ref');
-    bases{2} = featureMap('w12-ref');
     
     [base_merged, base_label, set_train, set_test, set_valid] = splitBase(bases);
 end
