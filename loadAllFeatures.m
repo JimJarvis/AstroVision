@@ -4,11 +4,10 @@
 function featureMap = loadAllFeatures()
 
 folders = {'ref', 'si850'};
-nbin = 256;
+nBin = 128;
 
 %% Precalculate the gaussian filters
-dummyopt.field = 0;
-opt.filters = genGaussianPyramid([], dummyopt);
+opt.filters = genFilters([]);
 
 fName = @(folder) ['data/' folder];
 
@@ -28,14 +27,14 @@ for f1 = folders
     f1 = f1{1};
     for f2 = folders
         f2 = f2{1};
-        keyname = [f1 '-' f2 '-' num2str(nbin)];
+        keyname = [f1 '-' f2 '-' num2str(nBin)];
         fprintf('\n======== %s ========\n', keyname);
         if isKey(featureMap, keyname)
             fprintf('Already in database. Pass. \n');
             continue
         end
         [varcell varmap] = loadVar(['BIN_' f2]);
-        opt.bincell = varcell{varmap(['bin_' f2 '_' num2str(nbin)])};
+        opt.bincell = varcell{varmap(['bin_' f2 '_' num2str(nBin)])};
         featureMap(keyname) = ...
             batchFeatureFolder(fName(f1), opt);
     end

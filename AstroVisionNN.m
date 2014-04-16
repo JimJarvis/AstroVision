@@ -4,6 +4,7 @@
 %
 %% Settable parameters
 base_key = {'ref-ref', 'w12-ref'};
+nBin = 256;
 hidden_layer_size = 800; % if an array, we use multi-layer NN
 iter = 400;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
@@ -34,7 +35,7 @@ if preprocess
     featureMap = loadVar('AstroFeatures'); featureMap = featureMap{1};
     bases = cell(numel(base_key), 1);
     for i = 1:numel(bases)
-        bases{i} = featureMap(base_key{i});
+        bases{i} = featureMap([base_key{i} '-' num2str(nBin)]);
     end
     
     [base_merged, base_label, set_train, set_test, set_valid] = splitBase(bases);
