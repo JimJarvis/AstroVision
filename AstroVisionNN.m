@@ -3,17 +3,17 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_keys = {'ref_ref', 'w12_ref'};
-nBin = 128;
-hidden_layer_size = 400; % if an array, we use multi-layer NN
-iter = 1000;  % gradient descent iterations, negative to use tolerance
+base_keys = {'ref_ref', 'si850_ref'};
+nBin = 512;
+hidden_layer_size = 1000; % if an array, we use multi-layer NN
+iter = 800;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
 pca_variance_thresh = 0.999; % how much variance we'd like to retain 
                     % when compressing training data by PCA
 tol_NN = 0.11; % neural network error tolerance
 preprocess = 1; % set to true to perform data set splitting and PCA, 
                 % otherwise directly call pca_* and set_* from workspace
-testing = 0; % set to true to perform testing (and cross-validation). 
+%% Run on test set can be done by Tester.m
 
 
 %% ================== Training/Testing data =================
@@ -161,9 +161,7 @@ if ~MULTI_NN
 testNN(Theta, 'Cross Validation', base_merged, base_label, set_valid, pca_mu, pca_sigma, pca_U);
 
 %% Optionally testing
-if testing
-testNN(Theta, 'Testing', base_merged, base_label, set_test, pca_mu, pca_sigma, pca_U);
-end
+% testNN(Theta, 'Testing', base_merged, base_label, set_test, pca_mu, pca_sigma, pca_U);
 
 
 %% ================= Saving to disk =================
