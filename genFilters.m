@@ -10,8 +10,8 @@
 %
 function filters = genFilters(option)
 
-if isfield(option, 'level'), level = option.level; else level = 6; end
-if isfield(option, 'window'), window = option.window; else window = 7; end
+if isfield(option, 'level'), level = option.level; else level = 7; end
+if isfield(option, 'window'), window = option.window; else window = 32; end
 if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 1; end
 if isfield(option, 'scale'), scale = option.scale; else scale = 2; end
 % If 'filters' field is already specified, then do nothing

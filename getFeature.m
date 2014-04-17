@@ -15,7 +15,6 @@ for l = 1:level
         imf = img; % no filtering
     else
         imf = imfilter(img, filters{l});
-        figure, imshow(imf)
     end
     bin = imgHistCount(imf, binrange);
     % L1-normalization
