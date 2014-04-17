@@ -44,10 +44,5 @@ end
 if exist('saveName', 'var')
     fileName = ['BIN_' saveName '.mat'];
     varName = ['bin_' saveName '_' num2str(nBin(1))];
-    eval([varName '=bincell;']);
-    if exist(fileName, 'file')
-        eval(['save ' fileName ' ' varName ' -append']);
-    else
-        eval(['save ' fileName ' ' varName]);
-    end
+    saveVar(fileName, varName, bincell);
 end

@@ -1,27 +1,33 @@
 %% Load into a variable from a ".mat" file on disk
 % Parameters:
-% - matfile 
-% - singlevar [optional], if this flag true, return [value, varname] instead
+% - fileName 
+% - singlevar [optional], if this flag true, return value directly instead
 % Returns:
-% - a cell array with each variable in sequence
-% - a map that maps a var name to an int index in the cell array
+% - a map that maps a var name to a value
 % usage: c{m('varname')}
 %
-function [c m] = loadVar(matfile, singlevar)
+function map = loadVar(fileName, singlevar)
 
-loaded = load(matfile);
+if ~strcmp(fileName(end-3:end), '.mat')
+    fileName = [fileName '.mat'];
+end
+
+%% If not exist, return empty
+if ~exist(fileName, 'file')
+    map = containers.Map();
+    return;
+end
+
+loaded = load(fileName);
 fns = fieldnames(loaded);
 
 %% c = variable's value and m = its name
 if exist('singlevar', 'var')
-    m = fns{1};
-    c = getfield(loaded, m);
+    map = getfield(loaded, fns{1});
     return
 end
 
-c = cell(numel(fns), 1);
-m = containers.Map();
+map = containers.Map();
 for i = 1:numel(fns)
-    c{i} = getfield(loaded, fns{i});
-    m(fns{i}) = i;
+    map(fns{i}) = getfield(loaded, fns{i});
 end

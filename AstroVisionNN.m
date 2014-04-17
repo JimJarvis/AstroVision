@@ -3,10 +3,10 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_key = {'ref-ref', 'w12-ref'};
-nBin = 256;
-hidden_layer_size = 800; % if an array, we use multi-layer NN
-iter = 400;  % gradient descent iterations, negative to use tolerance
+base_keys = {'ref_ref', 'w12_ref'};
+nBin = 128;
+hidden_layer_size = 400; % if an array, we use multi-layer NN
+iter = 1000;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
 pca_variance_thresh = 0.999; % how much variance we'd like to retain 
                     % when compressing training data by PCA
@@ -32,10 +32,10 @@ end
 if preprocess
     disp('Splitting the database into training/validation/test.');
     % Load from featureMap
-    featureMap = loadVar('AstroFeatures'); featureMap = featureMap{1};
-    bases = cell(numel(base_key), 1);
+    featureMap = loadVar('AstroFeatures');
+    bases = cell(numel(base_keys), 1);
     for i = 1:numel(bases)
-        bases{i} = featureMap([base_key{i} '-' num2str(nBin)]);
+        bases{i} = featureMap([base_keys{i} '_' num2str(nBin)]);
     end
     
     [base_merged, base_label, set_train, set_test, set_valid] = splitBase(bases);
@@ -168,4 +168,4 @@ end
 
 %% ================= Saving to disk =================
 %
-save AstroNN Theta base_names base_merged base_label set_train set_test set_valid hidden_layer_size pca_U pca_k pca_mu pca_sigma pca_variance_thresh;
+save AstroNN Theta base_keys base_merged base_label set_train set_test set_valid hidden_layer_size pca_U pca_k pca_mu pca_sigma pca_variance_thresh;

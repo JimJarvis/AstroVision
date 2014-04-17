@@ -9,7 +9,7 @@ i = 1;
 fileList = getFilesFolder(folder);
 for file = fileList
     fname = file{1}; % get file name from the singleton cell
-    fprintf('Image %d ...\n', i);
+    fprintf('%d ... ', i);
     try
         % might throw FITS read error
         % mat2gray to convert to [0, 1]
