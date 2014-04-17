@@ -3,8 +3,8 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_keys = {'ref_ref', 'si850_ref'};
-nBin = 512;
+base_keys = {'si850_ref', 'ref_ref'};
+nBin = 256;
 hidden_layer_size = 1000; % if an array, we use multi-layer NN
 iter = 800;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
