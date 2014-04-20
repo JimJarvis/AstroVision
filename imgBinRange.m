@@ -1,15 +1,16 @@
-%% Get 1D-clustered bin ranges from the image pyramids of a few randomly chosen images in a specific folder
+%% Get 1D-clustered bin ranges from the image pyramids of a few randomly chosen images in a specific dataset
 % parameter: 
-% - folder: folder of the images
+% - dataset: folder of the images (assume to be in 'data/...' folder). Generated bins will be appended to BIN_<dataSet>.mat with the variable name bin_<dataSet>_<nBin>.mat
 % - nBin: how many histogram bins per level. If a single number, we use the same nBin for all levels
-% - nSample: how many samples to draw from the folder to do the 1D clustering
+% - nSample: how many samples to draw from the dataset to do the 1D clustering
 % - option: as specified in genFilters. Leave it [] to use defaults.
-% - saveName: leave it blank if you don't want to save the result to disk. Otherwise specify this name and will be saved (or appended) to BIN_<saveName>.mat with the variable name bin_<saveName>_<nBin>
 %
 % returns:
 % - bincell: a cell array whose components are the bin ranges of each level of the pyramid. Each bin range will have (nBin - 1) interval endpoints, omitting -Inf at beginning and +Inf at end. 
 %
-function bincell = imgBinRange(folder, nBin, nSample, option, saveName)
+function bincell = imgBinRange(dataset, nBin, nSample, option)
+
+folder = ['data/' dataset]; % make a symbolic link for this
 
 filters = genFilters(option);
 level = numel(filters);
@@ -41,8 +42,6 @@ for l = 1:level % l == 1 for the original unblurred image (filter will be empty)
 end
 
 %% Save to disk
-if exist('saveName', 'var')
-    fileName = ['BIN_' saveName '.mat'];
-    varName = ['bin_' saveName '_' num2str(nBin(1))];
-    saveVar(fileName, varName, bincell);
-end
+fileName = ['BIN_' dataset '.mat'];
+varName = ['bin_' dataset '_' num2str(nBin(1))];
+saveVar(fileName, varName, bincell);
