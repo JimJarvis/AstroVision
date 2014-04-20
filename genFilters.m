@@ -14,8 +14,8 @@ function filters = genFilters(option)
 if isfield(option, 'filters'), filters = option.filters; return; end
 
 if isfield(option, 'level'), level = option.level; else level = 7; end
-if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 1; end
-if isfield(option, 'scale'), scale = option.scale; else scale = 2; end
+if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 2; end
+if isfield(option, 'scale'), scale = option.scale; else scale = 1.5; end
 
 filters = cell(level, 1);
 
@@ -23,7 +23,7 @@ filters = cell(level, 1);
 for l = 2:level
     % Half-window will be 2 sigma in width
     s = sigma * scale^(l - 2);
-    filters{l} = fspecial('gaussian', 4*s, s);
+    filters{l} = fspecial('gaussian', ceil(4*s), s);
 end
 
 if isfield(option, 'img')
