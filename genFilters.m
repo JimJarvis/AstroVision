@@ -10,18 +10,20 @@
 %
 function filters = genFilters(option)
 
-if isfield(option, 'level'), level = option.level; else level = 7; end
-if isfield(option, 'window'), window = option.window; else window = 32; end
-if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 1; end
-if isfield(option, 'scale'), scale = option.scale; else scale = 2; end
 % If 'filters' field is already specified, then do nothing
 if isfield(option, 'filters'), filters = option.filters; return; end
+
+if isfield(option, 'level'), level = option.level; else level = 7; end
+if isfield(option, 'sigma'), sigma = option.sigma; else sigma = 1; end
+if isfield(option, 'scale'), scale = option.scale; else scale = 2; end
 
 filters = cell(level, 1);
 
 % Leave filter{1} empty because the first level is the original image
 for l = 2:level
-    filters{l} = fspecial('gaussian', window, sigma * scale^(l-2));
+    % Half-window will be 2 sigma in width
+    s = sigma * scale^(l - 2);
+    filters{l} = fspecial('gaussian', 4*s, s);
 end
 
 if isfield(option, 'img')
