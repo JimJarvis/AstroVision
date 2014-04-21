@@ -7,12 +7,10 @@
 %
 function [] = visualStack(dataset, fil, saveName)
 
-folder = ['data/' dataset]; % make a symbolic link
 intensity = 4; % multiply the image to exaggerate the contrast
 
-files = getFilesFolder(folder);
 % Select a random image from all the files in that folder
-img = mat2gray(fitsread([folder '/' files{randi(numel(files))}]));
+img = randImg(dataset);
 
 % Use the default filter
 if ~exist('fil', 'var') || isempty(fil)

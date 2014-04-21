@@ -10,8 +10,6 @@
 %
 function bincell = imgBinRange(dataset, nBin, nSample, option)
 
-folder = ['data/' dataset]; % make a symbolic link for this
-
 filters = genFilters(option);
 level = numel(filters);
 
@@ -21,11 +19,6 @@ elseif numel(nBin) ~= level
     error('levels of nBin must agree with levels of filters');
 end
 
-files = getFilesFolder(folder); % listing of all file names
-nFile = numel(files);
-% read a random FITS image
-randImg = @() mat2gray(fitsread([folder '/' files{randi(nFile)}]));
-
 % Randomly choose 10 images to do the 1D clustering for each level of the pyramid. Report their GVF as well
 bincell = cell(level, 1);
 
@@ -33,7 +26,7 @@ for l = 1:level % l == 1 for the original unblurred image (filter will be empty)
     mergedImg = [];
     % multi-resolution
     for s = 1:nSample
-        img = randImg();
+        img = randImg(dataset);
         if ~isempty(filters{l})
             img = imfilter(img, filters{l}); end
         mergedImg = [mergedImg; img(:)];

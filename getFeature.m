@@ -10,7 +10,13 @@ bincell = option.bincell; % must have this field
 level = numel(filters);
 
 for l = 1:level
-    binrange = bincell{l};
+
+    % Bincell only specifies one level: we use it for all levels
+    if ~iscell(bincell)
+        binrange = bincell;
+    else
+        binrange = bincell{l};
+    end
 
     if isempty(filters{l})
         imf = img; % no filtering

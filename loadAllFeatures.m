@@ -3,18 +3,21 @@
 % Parameters:
 % - folders: cell array of folders: {'ref', 'si850'}
 % - nBin: the bin level for each pyramid layer. Must be consistent with those stored in BIN_*.mat
-function [] = loadAllFeatures(folders, nBin)
+% - method: how to specify the bins.
+%   - "adapt_each": load from BIN_*.mat a different bin for each level
+%   - "adapt": load from BIN_*.mat only the bin for the first level and apply the same bin to all the successive levels.
+%   - "equal": equally spaced bins.
+%
+function [] = loadAllFeatures(folders, nBin, method)
 
-% folders = {'ref', 'si850'};
-% nBin = 128;
-FILE = 'AstroFeatures.mat';
+% mat-feature file
+FILE = ['AstroFeatures_' method '.mat'];
+fName = @(folder) ['data/' folder];
 
 %% Precalculate the gaussian filters
 opt.filters = genFilters([]);
 
-fName = @(folder) ['data/' folder];
-
-featureMap = loadVar('AstroFeatures');
+featureMap = loadVar(FILE);
 if exist(FILE, 'file')
     fprintf('%s exists on disk. Current values:\n', FILE);
     for key = featureMap.keys
@@ -32,7 +35,7 @@ for f1 = folders
         varName = [f1 '_' f2 '_' num2str(nBin)];
         fprintf('\n======== %s ========\n', varName);
 
-        featureMap = loadVar('AstroFeatures');
+        featureMap = loadVar(FILE);
         if isKey(featureMap, varName)
             fprintf('Already in database. Pass. \n');
             continue
