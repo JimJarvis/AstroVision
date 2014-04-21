@@ -22,7 +22,10 @@ for file = fileList
     if i == 1 % first time, we allocate the space
         fea = getFeature(img, option);
         features = zeros(numel(fileList), numel(fea));
+        features(i, :) = fea;
+    else
+        features(i, :) = getFeature(img, option);
     end
-    features(i, :) = getFeature(img, option);
+
     i = i + 1;
 end
