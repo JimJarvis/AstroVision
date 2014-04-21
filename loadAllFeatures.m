@@ -28,9 +28,9 @@ else
     fprintf('Create a new %s\n', FILE);
 end
 
-%% Helper: save a batch feature to disk with a specified varName
+%% Helper: save all feature vectors from a dataset to disk with a specified varName
 function saveToDisk(dataset, opt, varName)
-    features = batchFeatureFolder(['data/' dataset], opt);
+    features = batchFeatureSet(dataset, opt);
     fprintf('\nSaving %s to disk ...\n', varName);
     saveVar(FILE, varName, features);
 end

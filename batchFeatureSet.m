@@ -1,19 +1,23 @@
-%% Get a matrix of feature vectors from a folder of images
+%% Get a matrix of feature vectors from a set of images
 % Each row a feauture, each col a dimension in a feature
-% <Subfolder name>, <Feature generation options>
+% Parameters:
+% - dataset: assume the folder to be data/'dataset'
+% - option
 %
-function features = batchFeatureFolder(folder, option)
+function features = batchFeatureSet(dataset, option)
+
+FOLDER = ['data/' dataset];
 
 % i represents the 'real' index
 i = 1;
-fileList = getFilesFolder(folder);
+fileList = getFilesFolder(FOLDER);
 for file = fileList
     fname = file{1}; % get file name from the singleton cell
     fprintf('%d ... ', i);
     try
         % might throw FITS read error
         % mat2gray to convert to [0, 1]
-        img = mat2gray(fitsread([folder '/' fname]));
+        img = mat2gray(fitsread([FOLDER '/' fname]));
     catch err
         fprintf(['ERROR:\t' fname '\n']);
         continue
