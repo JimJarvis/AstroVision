@@ -1,19 +1,18 @@
-%% Loads images from all folders, computes features and stores them
+%% Loads all images from a dataset, computes features and stores them
 % Gaussian pyramid options must be consistent with how the BIN_*.mat are generated
 % Parameters:
-% - folders: cell array of folders: {'ref', 'si850'}
+% - datasets: cell array of datasets: {'ref', 'si850'}, default folder data/'dataset'
 % - NBin: the bin level for each pyramid layer. Must be consistent with those stored in BIN_*.mat. If specified as an array, the same effect as calling loadAllFeatures() multiple times with different bin levels. 
 % - method: how to specify the bins.
 %   - "adapt_each": load from BIN_*.mat a different bin for each level
 %   - "adapt": load from BIN_*.mat only the bin for the first level and apply the same bin to all the successive levels.
-%   - "equal": equally spaced bins. If this method is invoked, the members in "folder" will be considered separately
+%   - "equal": equally spaced bins. If this method is invoked, the members in "datasets" will be considered separately
 %
-function [] = loadAllFeatures(folders, NBin, method)
+function [] = loadAllFeatures(datasets, NBin, method)
 
 % mat-feature file
 FILE = ['AstroFeatures_' method '.mat'];
-fName = @(folder) ['data/' folder];
-if ~iscell(folders), folders = {folders}; end
+if ~iscell(datasets), datasets = {datasets}; end
 
 %% Precalculate the gaussian filters
 opt.filters = genFilters([]);
@@ -29,8 +28,16 @@ else
     fprintf('Create a new %s\n', FILE);
 end
 
+%% Helper: save a batch feature to disk with a specified varName
+function saveToDisk(dataset, opt, varName)
+    features = batchFeatureFolder(['data/' dataset], opt);
+    fprintf('\nSaving %s to disk ...\n', varName);
+    saveVar(FILE, varName, features);
+end
+
 %% Helper: test if an entry already exists in the database. If yes, skip
 function exists = existEntry(varName)
+    fprintf('\n======== %s ========\n', varName);
     % featureMap = loadVar(FILE); % refresh the variable list
     exists = isKey(featureMap, varName);
     if exists
@@ -38,46 +45,37 @@ function exists = existEntry(varName)
     end
 end
 
-%% Helper: save a batch feature to disk with a specified varName
-function saveToDisk(folder, opt, varName)
-    features = batchFeatureFolder(fName(folder), opt);
-    fprintf('\nSaving %s to disk ...\n', varName);
-    saveVar(FILE, varName, features);
-end
-
 
 for nBin = NBin
-    for f1 = folders  
-        f1 = f1{1};
+    for set1 = datasets  
+        set1 = set1{1};
 
         if strcmp(method, 'equal')
             opt.bincell = linspace(0, 1, nBin + 1)';
             opt.bincell = opt.bincell(2:end-1);
-            varName = [f1 '_' num2str(nBin)];
+            varName = [set1 '_' num2str(nBin)];
             if existEntry(varName), continue, end
-            saveToDisk(f1, opt, varName);
+            saveToDisk(set1, opt, varName);
 
         else % adaptive methods
 
-            for f2 = folders
-                f2 = f2{1};
-                varName = [f1 '_' f2 '_' num2str(nBin)];
-                fprintf('\n======== %s ========\n', varName);
+            for set2 = datasets
+                set2 = set2{1};
+                varName = [set1 '_' set2 '_' num2str(nBin)];
 
                 if existEntry(varName), continue, end
 
                 % adaptive bins
-                binMap = loadVar(['BIN_' f2]);
+                binMap = loadVar(['BIN_' set2]);
                 % adapt_each
-                opt.bincell = binMap(['bin_' f2 '_' num2str(nBin)]);
+                opt.bincell = binMap(['bin_' set2 '_' num2str(nBin)]);
                 if strcmp(method, 'adapt')
                     % All levels are the same
-                    'good'
                     opt.bincell = opt.bincell{1};
                 end
 
                 % Save to disk frequently
-                saveToDisk(f1, opt, varName);
+                saveToDisk(set1, opt, varName);
             end
         end
     end
