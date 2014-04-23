@@ -4,14 +4,14 @@
 % - datasets: cell array of datasets: {'ref', 'si850'}, default folder data/'dataset'
 % - NBin: the bin level for each pyramid layer. Must be consistent with those stored in BIN_*.mat. If specified as an array, the same effect as calling loadAllFeatures() multiple times with different bin levels. 
 % - method: how to specify the bins.
-%   - "adapt_each": load from BIN_*.mat a different bin for each level
-%   - "adapt": load from BIN_*.mat only the bin for the first level and apply the same bin to all the successive levels.
+%   - "each": load from BIN_*.mat a different bin for each level
+%   - "first": load from BIN_*.mat only the bin for the first level and apply the same bin to all the successive levels.
 %   - "equal": equally spaced bins. If this method is invoked, the members in "datasets" will be considered separately
 %
 function [] = loadAllFeatures(datasets, NBin, method)
 
 % mat-feature file
-FILE = ['AstroFeatures_' method '.mat'];
+FILE = ['Features_' method '.mat'];
 if ~iscell(datasets), datasets = {datasets}; end
 
 %% Precalculate the gaussian filters
@@ -69,7 +69,7 @@ for nBin = NBin
                 binMap = loadVar(['BIN_' set2]);
                 % adapt_each
                 opt.bincell = binMap(['bin_' set2 '_' num2str(nBin)]);
-                if strcmp(method, 'adapt')
+                if strcmp(method, 'first')
                     % All levels are the same
                     opt.bincell = opt.bincell{1};
                 end
