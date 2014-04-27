@@ -17,7 +17,7 @@ for file = fileList
     try
         % might throw FITS read error
         % mat2gray to convert to [0, 1]
-        img = mat2gray(fitsread([FOLDER '/' fname]));
+        img = fitsread([FOLDER '/' fname]);
     catch err
         fprintf(['ERROR:\t' fname '\n']);
         continue

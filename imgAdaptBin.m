@@ -1,4 +1,4 @@
-%% Get 1D-clustered bin ranges from the image pyramids of a few randomly chosen images in a specific dataset
+%% Get 1D-clustered adaptive bin ranges from the image pyramids of a few randomly chosen images in a specific dataset
 % parameter: 
 % - dataset: folder of the images (assume to be in 'data/...' folder). Generated bins will be appended to BIN_<dataSet>.mat with the variable name bin_<dataSet>_<nBin>.mat
 % - nBin: how many histogram bins per level. If a single number, we use the same nBin for all levels
@@ -8,7 +8,7 @@
 % returns:
 % - bincell: a cell array whose components are the bin ranges of each level of the pyramid. Each bin range will have (nBin - 1) interval endpoints, omitting -Inf at beginning and +Inf at end. 
 %
-function bincell = imgBinRange(dataset, nBin, nSample, option)
+function bincell = imgAdaptBin(dataset, nBin, nSample, option)
 
 filters = genFilters(option);
 level = numel(filters);
