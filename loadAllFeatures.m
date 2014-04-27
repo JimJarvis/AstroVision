@@ -2,13 +2,13 @@
 % Gaussian pyramid options must be consistent with how the BIN_*.mat are generated
 % Parameters:
 % - datasets: cell array of datasets: {'ref', 'si850'}, default folder data/'dataset'
-% - NBin: the bin level for each pyramid layer. Must be consistent with those stored in BIN_*.mat. If specified as an array, the same effect as calling loadAllFeatures() multiple times with different bin levels. 
+% - nBins: the bin level for each pyramid layer. Must be consistent with those stored in BIN_*.mat. If specified as an array, the same effect as calling loadAllFeatures() multiple times with different bin levels. 
 % - method: how to specify the bins.
 %   - "each": load from BIN_*.mat a different bin for each level
 %   - "first": load from BIN_*.mat only the bin for the first level and apply the same bin to all the successive levels.
 %   - "equal": equally spaced bins. If this method is invoked, the members in "datasets" will be considered separately
 %
-function [] = loadAllFeatures(datasets, NBin, method)
+function [] = loadAllFeatures(datasets, nBins, method)
 
 % mat-feature file
 FILE = ['Features_' method '.mat'];
@@ -46,13 +46,13 @@ function exists = existEntry(varName)
 end
 
 
-for nBin = NBin
+for nBin = nBins
     for set1 = datasets  
         set1 = set1{1};
 
         if strcmp(method, 'equal')
-            opt.bincell = linspace(0, 1, nBin + 1)';
-            opt.bincell = opt.bincell(2:end-1);
+            binMap = loadVar('BIN_equal');
+            opt.bincell = binMap(['bin_' num2str(nBin)]);
             varName = [set1 '_' num2str(nBin)];
             if existEntry(varName), continue, end
             saveToDisk(set1, opt, varName);
