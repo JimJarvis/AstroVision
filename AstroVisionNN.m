@@ -3,14 +3,15 @@
 % Jarvis Initiative
 %
 %% Settable parameters
+base_file = 'first';
 base_keys = {'si850_ref', 'ref_ref'};
 nBin = 256;
 hidden_layer_size = 1000; % if an array, we use multi-layer NN
-iter = 800;  % gradient descent iterations, negative to use tolerance
+iter = 300;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
 pca_variance_thresh = 0.999; % how much variance we'd like to retain 
                     % when compressing training data by PCA
-tol_NN = 0.11; % neural network error tolerance
+tol_NN = 1e-3; % neural network error tolerance: 0.1
 preprocess = 1; % set to true to perform data set splitting and PCA, 
                 % otherwise directly call pca_* and set_* from workspace
 %% Run on test set can be done by Tester.m
@@ -32,7 +33,7 @@ end
 if preprocess
     disp('Splitting the database into training/validation/test.');
     % Load from featureMap
-    featureMap = loadVar('AstroFeatures');
+    featureMap = loadVar(['Features_' base_file]);
     bases = cell(numel(base_keys), 1);
     for i = 1:numel(bases)
         bases{i} = featureMap([base_keys{i} '_' num2str(nBin)]);
