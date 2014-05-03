@@ -4,8 +4,9 @@
 % - dataset: assume the folder to be data/'dataset'
 % - filters
 % - bincell
+% - isNoisy
 %
-function features = batchFeatureSet(dataset, filters, bincell)
+function features = batchFeatureSet(dataset, filters, bincell, isNoisy)
 
 FOLDER = ['data/' dataset];
 
@@ -19,6 +20,9 @@ for file = fileList
         % might throw FITS read error
         % mat2gray to convert to [0, 1]
         img = fitsread([FOLDER '/' fname]);
+        if isNoisy
+            img = addNoise(img);
+        end
     catch err
         fprintf(['ERROR:\t' fname '\n']);
         continue

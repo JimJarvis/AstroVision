@@ -2,4 +2,4 @@
 %
 function img = addNoise(img)
 
-img = img + randn(size(img)) * 0.19;
+img = img + randn(size(img)) * 0.47;

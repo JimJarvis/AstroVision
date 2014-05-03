@@ -1,4 +1,5 @@
 %% Loads all images from a dataset, computes features and stores them
+% Store to either "Noise_*.mat" or "Pure_*.mat"
 % Gaussian pyramid options must be consistent with how the BIN_*.mat are generated
 % Parameters:
 % - datasets: cell array of datasets: {'ref', 'si850'}, default folder data/'dataset'
@@ -11,14 +12,14 @@
 %
 function [] = loadAllFeatures(datasets, nBins, method, isNoisy)
 
-% mat-feature file
-FILE = ['Features_' method '.mat'];
-if ~iscell(datasets), datasets = {datasets}; end
-
-isNoisy = exist('isNoisy', 'var') && isNoisy;
-
 %% Precalculate the gaussian filters
+isNoisy = exist('isNoisy', 'var') && isNoisy;
 filters = genFilters(isNoisy);
+
+% mat-feature file
+if isNoisy, header = 'Noisy_'; else header = 'Pure_'; end
+FILE = [header method '.mat'];
+if ~iscell(datasets), datasets = {datasets}; end
 
 featureMap = loadVar(FILE);
 if exist(FILE, 'file')
@@ -33,7 +34,7 @@ end
 
 %% Helper: save all feature vectors from a dataset to disk with a specified varName
 function saveToDisk(dataset, bincell, varName)
-    features = batchFeatureSet(dataset, filters, bincell);
+    features = batchFeatureSet(dataset, filters, bincell, isNoisy);
     fprintf('\nSaving %s to disk ...\n', varName);
     saveVar(FILE, varName, features);
 end
@@ -48,13 +49,14 @@ function exists = existEntry(varName)
     end
 end
 
+if isNoisy, header = 'BIN_noisy_'; else header = 'BIN_pure_'; end
 
 for nBin = nBins
     for set1 = datasets  
         set1 = set1{1};
 
         if strcmp(method, 'equal')
-            binMap = loadVar('BIN_equal');
+            binMap = loadVar([header 'equal']);
             bincell = binMap(['bin_' num2str(nBin)]);
             varName = [set1 '_' num2str(nBin)];
             if existEntry(varName), continue, end
@@ -69,7 +71,7 @@ for nBin = nBins
                 if existEntry(varName), continue, end
 
                 % adaptive bins
-                binMap = loadVar(['BIN_' set2]);
+                binMap = loadVar([header set2]);
                 % adapt_each
                 bincell = binMap(['bin_' set2 '_' num2str(nBin)]);
                 if strcmp(method, 'first')
