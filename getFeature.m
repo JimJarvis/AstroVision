@@ -1,12 +1,13 @@
 %% Returns the multi-resolution histogram feature vector from a single image
-% option struct see 'genFilters.m'
-% visual: true to display a side-by-side histogram plot
+% Parameters:
+% - img
+% - filters: number of filters determine the level. 
+%       First level should be the original image.
+% - bincell: if only 1 set of bin ranges, we use it for all levels
+% - visual: true to display a side-by-side histogram plot
 %
-function feature = getFeature(img, option, visual)
+function feature = getFeature(img, filters, bincell, visual)
 
-%% option setting with defaults
-filters = genFilters(option);
-bincell = option.bincell; % must have this field
 level = numel(filters);
 
 for l = 1:level

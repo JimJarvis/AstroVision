@@ -2,19 +2,20 @@
 % Press any key to display the stack one by one. Close all at last.
 % Parameters:
 % - Randomly pick an image file from a folder (data/'dataset') 
-% - fil (optional): if empty, use the default genFilter([])
+% - isNoisy: use different filters
 % - saveName (optional): save to 'test/*' with saveName_level
 %
-function [] = visualStack(dataset, fil, saveName)
+function [] = visualStack(dataset, isNoisy, saveName)
 
-intensity = 4; % multiply the image to exaggerate the contrast
+intensity = 15; % multiply the image to exaggerate the contrast
+
+% Use the default filter
+fil = genFilters(isNoisy);
 
 % Select a random image from all the files in that folder
 img = randImg(dataset);
-
-% Use the default filter
-if ~exist('fil', 'var') || isempty(fil)
-    fil = genFilters([]);
+if isNoisy
+    img = addNoise(img);
 end
 
 % Generate the image stack
@@ -28,7 +29,8 @@ end
 % save to 'test/' folder
 if exist('saveName', 'var')
     for l = 1:level
-        imwrite((stack{l}), ['test/' saveName '_' num2str(l) '.png']);
+        imwrite(stack{l}, ...
+            sprintf('test/%s_%d.png', saveName, l));
     end
 end
 

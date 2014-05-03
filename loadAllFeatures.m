@@ -7,15 +7,18 @@
 %   - "each": load from BIN_*.mat a different bin for each level
 %   - "first": load from BIN_*.mat only the bin for the first level and apply the same bin to all the successive levels.
 %   - "equal": equally spaced bins. If this method is invoked, the members in "datasets" will be considered separately
+% - isNoisy: add noises to the images?
 %
-function [] = loadAllFeatures(datasets, nBins, method)
+function [] = loadAllFeatures(datasets, nBins, method, isNoisy)
 
 % mat-feature file
 FILE = ['Features_' method '.mat'];
 if ~iscell(datasets), datasets = {datasets}; end
 
+isNoisy = exist('isNoisy', 'var') && isNoisy;
+
 %% Precalculate the gaussian filters
-opt.filters = genFilters([]);
+filters = genFilters(isNoisy);
 
 featureMap = loadVar(FILE);
 if exist(FILE, 'file')
@@ -29,8 +32,8 @@ else
 end
 
 %% Helper: save all feature vectors from a dataset to disk with a specified varName
-function saveToDisk(dataset, opt, varName)
-    features = batchFeatureSet(dataset, opt);
+function saveToDisk(dataset, bincell, varName)
+    features = batchFeatureSet(dataset, filters, bincell);
     fprintf('\nSaving %s to disk ...\n', varName);
     saveVar(FILE, varName, features);
 end
@@ -52,10 +55,10 @@ for nBin = nBins
 
         if strcmp(method, 'equal')
             binMap = loadVar('BIN_equal');
-            opt.bincell = binMap(['bin_' num2str(nBin)]);
+            bincell = binMap(['bin_' num2str(nBin)]);
             varName = [set1 '_' num2str(nBin)];
             if existEntry(varName), continue, end
-            saveToDisk(set1, opt, varName);
+            saveToDisk(set1, bincell, varName);
 
         else % adaptive methods
 
@@ -68,14 +71,14 @@ for nBin = nBins
                 % adaptive bins
                 binMap = loadVar(['BIN_' set2]);
                 % adapt_each
-                opt.bincell = binMap(['bin_' set2 '_' num2str(nBin)]);
+                bincell = binMap(['bin_' set2 '_' num2str(nBin)]);
                 if strcmp(method, 'first')
                     % All levels are the same
-                    opt.bincell = opt.bincell{1};
+                    bincell = bincell{1};
                 end
 
                 % Save to disk frequently
-                saveToDisk(set1, opt, varName);
+                saveToDisk(set1, bincell, varName);
             end
         end
     end
