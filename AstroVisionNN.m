@@ -3,15 +3,15 @@
 % Jarvis Initiative
 %
 %% Settable parameters
-base_file = 'first';
-base_keys = {'si850_ref', 'ref_ref'};
-nBin = 256;
-hidden_layer_size = 1000; % if an array, we use multi-layer NN
+base_file = 'equal';
+base_keys = {'ref', 'si850'};
+nBin = 1024;
+hidden_layer_size = [400 400]; % if an array, we use multi-layer NN
 iter = 300;  % gradient descent iterations, negative to use tolerance
 lambda = 1;  % regularization coeff
 pca_variance_thresh = 0.999; % how much variance we'd like to retain 
                     % when compressing training data by PCA
-tol_NN = 1e-3; % neural network error tolerance: 0.1
+tol_NN = 0.1; % neural network error tolerance: 0.11
 preprocess = 1; % set to true to perform data set splitting and PCA, 
                 % otherwise directly call pca_* and set_* from workspace
 %% Run on test set can be done by Tester.m
@@ -33,7 +33,9 @@ end
 if preprocess
     disp('Splitting the database into training/validation/test.');
     % Load from featureMap
-    featureMap = loadVar(['Features_' base_file]);
+    if ~exist('featureMap', 'var')
+        featureMap = loadVar(['Features_' base_file]);
+    end
     bases = cell(numel(base_keys), 1);
     for i = 1:numel(bases)
         bases{i} = featureMap([base_keys{i} '_' num2str(nBin)]);

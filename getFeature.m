@@ -38,6 +38,6 @@ for l = 1:level
         subplot(level, 1, l);
         length_cut = 1:32;
         % bar(binrange(length_cut), bin(length_cut), 0.6, 'FaceColor', [0.5 0 0.6], 'EdgeColor', [0 1 0]);
-        bar([0;binrange], bin, 0.8, 'FaceColor', [0.5 0 0.6], 'EdgeColor', [0 1 0]);
+        bar([0;binrange], bin, 1, 'FaceColor', [0.5 0 0.6], 'EdgeColor', [0 1 0]);
     end
 end

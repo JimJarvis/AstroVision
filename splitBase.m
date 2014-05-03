@@ -30,6 +30,9 @@ for i = 2:N
     base_label = [base_label; ones(size(bases{i}, 1), 1) * i];
 end
 
+% no splitting at all
+if percent_test == 0 && percent_valid == 0, return, end
+
 %{
 label_func = @labelFunc;
     lengs = zeros(1, N+1);
