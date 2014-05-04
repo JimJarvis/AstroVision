@@ -42,7 +42,7 @@ for dataset = datasets
         end
 
         %% Save to disk
-        if isNoisy, header = 'BIN_noise_'; else header = 'BIN_'; end
+        if isNoisy, header = 'BIN_noisy_'; else header = 'BIN_'; end
         fileName = [header dataset '.mat'];
         varName = ['bin_' dataset '_' num2str(nBin)];
         saveVar(fileName, varName, bincell);

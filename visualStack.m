@@ -20,6 +20,7 @@ end
 
 % Generate the image stack
 level = numel(fil);
+if isNoisy, level = level + 1; end
 stack = cell(level, 1);
 stack{1} = img * intensity;  % to exaggerate the brightness
 for l = 2:level
